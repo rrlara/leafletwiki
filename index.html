@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wikipedia articles in Rogaland</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--<meta property="og:image" content="route.png" />-->
+	<link rel="stylesheet" href="./lib/leaflet/leaflet.css" />
+	<link rel="stylesheet" href="./lib/sidebar/L.Control.Sidebar.css" />
+	<style>
+		html, body, #map { margin: 0; height: 100%; background: #fff; }
+		.leaflet-sidebar img { float: right; padding: 0 0 10px 10px; }
+	</style>
+</head>
+<body>
+
+    <div id="sidebar"></div>
+	<div id="map"></div>
+	<script src="./lib/reqwest.min.js"></script>
+	<script src="./lib/leaflet/leaflet.js"></script>
+	<script src="./lib/sidebar/L.Control.Sidebar.js"></script>
+	<script src="./src/Leaflet.Wikipedia.js"></script>
+	<script>
+
+	var map = L.map('map', {
+		minZoom: 5,
+		maxZoom: 16
+	}).setView([47.6253776, -122.3770779], 12);
+
+	var sidebar = L.control.sidebar('sidebar', {
+		closeButton: true,
+		position: 'left'
+	});
+	map.addControl(sidebar);
+		
+	L.tileLayer('http://{s}.tiles.mapbox.com/v3/spatialdev.map-4o51gab2/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
+	}).addTo(map);
+
+	var template = '<h2>{label}</h2><p><img src="{thumbnail}">{abstract}</p><p><a href="{link}">Read on Wikipedia</a></p>';
+	function getWikis(){
+		L.wikipedia({
+			query: {
+				fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail'],
+				bounds: map.getBounds()
+			},
+			marker: {
+				icon: L.icon({ // Icons from http://www.icondrawer.com/social-icons.php
+					iconUrl: 'img/wikipedia_16.png',
+					iconRetinaUrl: 'img/wikipedia_32.png',
+					iconSize: [16, 16]
+				})
+			}
+		}).addTo(map).on('click', function(evt) {
+			sidebar.setContent(L.Util.template(template, evt.layer.data)).show();
+		});
+
+	}
+	getWikis();
+
+	var marker = null;
+	marker = L.marker(map.getCenter()).addTo(map);
+	map.on('dragend', function() {
+		map.removeLayer(marker);
+		marker = L.marker(map.getCenter()).addTo(map);
+		getWikis();
+	});
+
+//		console.log(map);
+
+	</script>
+</body>
+</html>
