@@ -56,17 +56,40 @@
 		});
 
 	}
-	getWikis();
+//	getWikis();
 
 	var marker = null;
-	marker = L.marker(map.getCenter()).addTo(map);
+//	marker = L.marker(map.getCenter()).addTo(map);
 	map.on('dragend', function() {
-		map.removeLayer(marker);
-		marker = L.marker(map.getCenter()).addTo(map);
+//		map.removeLayer(marker);
 		getWikis();
 	});
 
-//		console.log(map);
+	var options = {
+		enableHighAccuracy: true,
+		timeout: 5000,
+		maximumAge: 0
+	};
+
+	function success(pos) {
+		var crd = pos.coords;
+
+		console.log('Your current position is:');
+		console.log('Latitude : ' + crd.latitude);
+		console.log('Longitude: ' + crd.longitude);
+		console.log('More or less ' + crd.accuracy + ' meters.');
+
+		map.setView([crd.latitude, crd.longitude], 12);
+//		marker = L.marker(map.getCenter()).addTo(map);
+		getWikis();
+
+	};
+
+	function error(err) {
+		console.warn('ERROR(' + err.code + '): ' + err.message);
+	};
+
+	navigator.geolocation.getCurrentPosition(success, error, options);
 
 	</script>
 </body>
