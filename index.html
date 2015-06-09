@@ -40,7 +40,8 @@
 		detectRetina: true
 	}).addTo(map);
 
-	var template = '<h2>{label}</h2><p><img src="{thumbnail}">{abstract}</p><p><a href="{link}">Read on Wikipedia</a></p>';
+	var template = '<h2>{label}</h2><p><img src="{thumbnail}">{abstract}</p><p><a target="_blank" href="{link}">Read on Wikipedia</a></p>';
+
 	function getWikis(){
 //		L.wikipedia({
 //			query: {
@@ -84,7 +85,6 @@
 		})
 //		orale.addTo(map);
 		map.addLayer(orale);
-		console.log(orale);
 		orale.on('click', function(evt) {
 			sidebar.setContent(L.Util.template(template, evt.layer.data)).show();
 		});

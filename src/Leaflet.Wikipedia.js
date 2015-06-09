@@ -94,6 +94,7 @@ var wikiGroup = L.Wikipedia = L.FeatureGroup.extend({
 			url: url,
 			type: 'jsonp', 
 			success: function (data) {
+				console.log(data);
 				if (data.results && data.results.bindings) {
 					callback(data.results.bindings);
 				}
@@ -103,7 +104,7 @@ var wikiGroup = L.Wikipedia = L.FeatureGroup.extend({
 	},
 
 	_parse: function (items) {
-		console.log("items", items.length);
+		console.log("items", items);
 		for (var i = 0, len = items.length; i < len; i++) {
 			var data   = this._simplify(items[i]),
 				marker = L.marker([data.lat, data.lng], this.options.marker);
@@ -111,6 +112,8 @@ var wikiGroup = L.Wikipedia = L.FeatureGroup.extend({
 			marker.data = data;
 
 			this.addLayer(marker);
+
+			console.log("marker.data", marker.data);
 		}
 	},
 
@@ -135,7 +138,7 @@ var wikiGroup = L.Wikipedia = L.FeatureGroup.extend({
 
 	_getBoundsFilter: function (latLngBounds) {
 		latLngBounds = L.latLngBounds(latLngBounds);
-		console.log(latLngBounds);
+		//console.log(latLngBounds);
 		return L.Util.template('(?lng > {west} AND ?lng < {east} AND ?lat > {south} AND ?lat < {north})', {
 			south: latLngBounds.getSouth(),
 			west:  latLngBounds.getWest(),
