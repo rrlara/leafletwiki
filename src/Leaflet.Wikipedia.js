@@ -6,11 +6,11 @@ L.Wikipedia = L.FeatureGroup.extend({
 		query: {
 			fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail', 'types'],
 			limit:  1000,
-			language: 'en'		
+			language: 'en'
 		},
 		params: {
 			format: 'json',
-			defaultGraphUri: 'http://dbpedia.org', // ???			
+			defaultGraphUri: 'http://dbpedia.org', // ???
 		},
 		fields: {
 			abstract: [
