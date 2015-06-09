@@ -22,24 +22,48 @@
 	<script src="./src/Leaflet.Wikipedia.js"></script>
 	<script>
 
+		var orale = null;
+
 	var map = L.map('map', {
 		minZoom: 5,
-		maxZoom: 16
+		maxZoom: 16,
+
 	}).setView([40.3149907, -96.7695338], 5);
 
 	var sidebar = L.control.sidebar('sidebar', {
 		closeButton: true,
-		position: 'left'
+		position: 'right'
 	});
 	map.addControl(sidebar);
 		
 	L.tileLayer('http://{s}.tiles.mapbox.com/v3/spatialdev.map-4o51gab2/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
+		detectRetina: true
 	}).addTo(map);
 
 	var template = '<h2>{label}</h2><p><img src="{thumbnail}">{abstract}</p><p><a href="{link}">Read on Wikipedia</a></p>';
 	function getWikis(){
-		L.wikipedia({
+//		L.wikipedia({
+//			query: {
+//				fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail'],
+//				bounds: map.getBounds()
+//			},
+//			marker: {
+////				icon: L.icon({ // Icons from http://www.icondrawer.com/social-icons.php
+////					iconUrl: 'img/wikipedia_16.png',
+////					iconRetinaUrl: 'img/wikipedia_32.png',
+////					iconSize: [16, 16]
+////				})
+//				marker: L.circle([51.508, -0.11], 500, {
+//					color: 'red',
+//					fillColor: '#f03',
+//					fillOpacity: 0.5
+//				})
+//
+//			}
+//		}).addTo(map).on('click', function(evt) {
+//			sidebar.setContent(L.Util.template(template, evt.layer.data)).show();
+//		});
+		orale = new L.wikipedia({
 			query: {
 				fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail'],
 				bounds: map.getBounds()
@@ -57,16 +81,20 @@
 				})
 
 			}
-		}).addTo(map).on('click', function(evt) {
+		})
+//		orale.addTo(map);
+		map.addLayer(orale);
+		console.log(orale);
+		orale.on('click', function(evt) {
 			sidebar.setContent(L.Util.template(template, evt.layer.data)).show();
 		});
-
 	}
 
 //	var marker = null;
 //	marker = L.marker(map.getCenter()).addTo(map);
 	map.on('dragend', function() {
 //		map.removeLayer(marker);
+		orale.clearLayers();
  		getWikis();
 	});
 
@@ -86,6 +114,11 @@
 
 		map.setView([crd.latitude, crd.longitude], 14, {animation: true});
 //		marker = L.marker(map.getCenter()).addTo(map);
+		var circle = L.circle([crd.latitude, crd.longitude], 40, {
+			color: 'red',
+			fillColor: '#f03',
+			fillOpacity: 0.5
+		}).addTo(map);
 		getWikis();
 
 	};

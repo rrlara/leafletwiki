@@ -1,4 +1,4 @@
-L.Wikipedia = L.FeatureGroup.extend({
+var wikiGroup = L.Wikipedia = L.FeatureGroup.extend({
 	options: { // AND {language}
 		urlTemplate: 'http://dbpedia.org/sparql/?default-graph-uri={defaultGraphUri}&query={query}&format={format}',
 		queryTemplate: "SELECT DISTINCT {select} WHERE {{res} FILTER ({filter} {lang})} Limit {limit}",		
@@ -103,6 +103,7 @@ L.Wikipedia = L.FeatureGroup.extend({
 	},
 
 	_parse: function (items) {
+		console.log("items", items.length);
 		for (var i = 0, len = items.length; i < len; i++) {
 			var data   = this._simplify(items[i]),
 				marker = L.marker([data.lat, data.lng], this.options.marker);
@@ -110,7 +111,7 @@ L.Wikipedia = L.FeatureGroup.extend({
 			marker.data = data;
 
 			this.addLayer(marker);
-		}	
+		}
 	},
 
 	_getFields: function (pos, data) {
@@ -165,7 +166,10 @@ L.Wikipedia = L.FeatureGroup.extend({
 			}
 		}
 		return data;
-	}
+	},
+
+
+
 
 });
 
