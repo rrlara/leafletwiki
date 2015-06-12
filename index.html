@@ -10,12 +10,14 @@
 	<style>
 		html, body, #map { margin: 0; height: 100%; background: #fff; }
 		.leaflet-sidebar img { float: right; padding: 0 0 10px 10px; }
+		#searchButton {top: 10px; right:10px; background-color: rgba(0, 0, 0, 0.5); position: absolute; padding: 10px; color: #ffffff}
 	</style>
 </head>
 <body>
 
     <div id="sidebar"></div>
 	<div id="map"></div>
+	<div id="searchButton">SEARCH</div>
 	<script src="./lib/reqwest.min.js"></script>
 	<script src="./lib/leaflet/leaflet.js"></script>
 	<script src="./lib/sidebar/L.Control.Sidebar.js"></script>
@@ -35,6 +37,8 @@
 		position: 'right'
 	});
 	map.addControl(sidebar);
+
+		document.getElementById("searchButton").addEventListener("click", updateWikis);
 		
 	L.tileLayer('http://{s}.tiles.mapbox.com/v3/spatialdev.map-4o51gab2/{z}/{x}/{y}.png', {
 		detectRetina: true
@@ -90,12 +94,15 @@
 		});
 	}
 
+		function updateWikis(){
+			orale.clearLayers();
+			getWikis();
+		}
+
 //	var marker = null;
 //	marker = L.marker(map.getCenter()).addTo(map);
 	map.on('dragend', function() {
 //		map.removeLayer(marker);
-		orale.clearLayers();
- 		getWikis();
 	});
 
 	var options = {
